@@ -4,12 +4,14 @@ const express = require('express')
 const mongoose = require ('mongoose')
 const postModel = require('./models/post.model')
 const { post } = require("./routes/post.route")
-
+const fileUpload = require("express-fileupload")
 // Routes
 
 const app = express()
 
 app.use(express.json())
+app.use(express.static('static'))
+app.use(fileUpload({}))
 
 // Routes
 app.use('/api/post', require("./routes/post.route"))
