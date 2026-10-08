@@ -4,6 +4,7 @@ const postService = require("../server/post.service");
 class PostController {
     async getAll (req, res) {
         try {
+            
             const allPosts = await postService.getAll()
             res.status(200).json(allPosts)
         } catch (error) {
