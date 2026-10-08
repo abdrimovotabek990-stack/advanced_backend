@@ -23,7 +23,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "dotenv": "^18.0.6",
     "express": "^5.2.1",
+    "mongoose": "^9.11.1",
     "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
