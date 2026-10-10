@@ -57,6 +57,11 @@ class AuthService {
 
         return {user: userDto, ...tokens}
     }
+
+    async logout(refreshToken) {
+        return await tokenService.removeToken(refreshToken)
+        
+    }
 } 
 
 
