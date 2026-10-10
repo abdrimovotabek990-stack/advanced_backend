@@ -62,6 +62,28 @@ class AuthService {
         return await tokenService.removeToken(refreshToken)
         
     }
+
+    async refresh(refreshToken) {
+        if(!refreshToken){
+            throw new Error('refresh auth muddati tugadi')
+        }
+
+        const userPayload = tokenService.validateRefreshToken(refreshToken)
+
+        const tokenDb = await tokenService.findToken(refreshToken)
+        if(!userPayload || !tokenDb) {
+            throw new Error('refresh auth muddati tugadiiiii')
+        }
+
+        const user = await userModel.findById(userPayload.id)
+        const userDto = new UserDto(user)
+
+        const tokens = tokenService.generateToken({...userDto})
+
+        await tokenService.saveToken(userDto.id, tokenService.refreshToken)
+
+        return {user: userDto, ...tokens}
+    } 
 } 
 
 
