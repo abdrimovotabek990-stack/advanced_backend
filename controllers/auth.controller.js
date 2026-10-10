@@ -23,6 +23,18 @@ class AuthController {
             console.log(error)
         }
     }
+
+    async login (req, res, next) {
+        try {
+            const {email, password} = req.body
+            const data = await authService.login(email, password)
+            res.cookie('token', data.refreshToken, {httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
+            
+            return res.json({data})
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 module.exports = new AuthController

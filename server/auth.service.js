@@ -36,6 +36,27 @@ class AuthService {
         user.isActivated = true
         await user.save()
     }
+
+    async login(email, password) {
+        const user = await userModel.findOne({email})
+
+        if(!user) {
+            throw new Error("Foydalanuvchi topilmadi")
+        }
+
+        const isPassword = await bcrypt.compare(password, user.password)
+        if(!isPassword){
+            throw new Error("Parol xato")
+        }
+
+        const userDto = new UserDto(user)
+
+        const tokens = tokenService.generateToken({...userDto})
+
+        await tokenService.saveToken(userDto.id, tokenService.refreshToken)
+
+        return {user: userDto, ...tokens}
+    }
 } 
 
 
