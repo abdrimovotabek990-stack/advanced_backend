@@ -1,4 +1,4 @@
-const authService = require("../service/auth.service")
+const authService = require("../server/auth.service")
 
 class AuthController {
     async register(req, res, next) {
@@ -18,7 +18,7 @@ class AuthController {
         try {
             const userId = req.params.id
             await authService.activation(userId)
-            return res.json({message: "User activatsiya qilindi"})
+            return res.redirect('https://Yuriii.ac')
         } catch (error) {
             console.log(error)
         }
