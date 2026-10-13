@@ -7,10 +7,11 @@ const { post } = require("./routes/post.route")
 const fileUpload = require("express-fileupload")
 const errorMiddleware = require("./middlewares/error.middleware")
 // Routes
+const cors = require('cors')
 
 const app = express()
 
-
+app.use(cors())
 app.use(express.json())
 app.use(express.static('static'))
 app.use(fileUpload({}))
