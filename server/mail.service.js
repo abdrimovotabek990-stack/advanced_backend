@@ -15,7 +15,7 @@ class MailService {
         })
     }
 
-    async sendMail(email, activationLink) {
+    async sendActivationMail(email, activationLink) {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to: email,
@@ -27,6 +27,24 @@ class MailService {
                 `,
         })
     }
+
+    async sendForgetPasswordMail(email, activationLink) {
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            to: email,
+            subject: `Forgot password`,
+            html: `
+                <div>
+                    <h1>Time to hacking. If you wnat to recover your account just click the below.<h1>
+                    <a href="${activationLink}">Link to recovery account</a>
+
+                    <b>This link will work during 15 minutes</b>
+                </div>
+                `,
+        })
+    }
+
+
 }
 
 module.exports = new MailService()
