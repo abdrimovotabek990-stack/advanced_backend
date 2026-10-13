@@ -106,7 +106,21 @@ class AuthService {
         await mailService.sendForgetPasswordMail(email, `${process.env.CLIENT_URL}/recovery-account/${tokens.accessToken}`)
 
         return 200
-    } 
+    }
+    async recoveryAccount(token, password) {
+        if (!token) {
+        throw BaseError.BadRequest('Something went wrong with token')
+    }
+
+    const userData = tokenService.validateAccessToken(token)
+    if (!userData) {
+        throw BaseError.BadRequest("Expired access to your account")
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10)
+    await userModel.findByIdAndUpdate(userData.id, { password: hashPassword })
+    return 200
+    }
 } 
 
 
