@@ -3,6 +3,7 @@ const userModel = require("../models/user.model")
 const bcrypt = require('bcrypt')
 const tokenService = require("./token.service")
 const mailService = require("./mail.service")
+const BaseError = require("../errors/base.error")
 
 
 class AuthService {
@@ -10,7 +11,7 @@ class AuthService {
         const existUser = await userModel.findOne({ email })
 
         if(existUser) {
-            throw new Error(`Bu email: ${email} dan allaqachon register qilingan`)
+            throw BaseError.BadRequest(`Bu email: ${email} dan allaqachon register qilingan`)
         }
 
         const hashPassword = await bcrypt.hash(password, 10)
@@ -30,7 +31,7 @@ class AuthService {
     async activation(userId){
         const user = await userModel.findById(userId)
         if(!user) {
-            throw new Error('User topilmadi')
+            throw BaseError.BadRequest('User topilmadi')
         }
 
         user.isActivated = true
@@ -41,7 +42,7 @@ class AuthService {
         const user = await userModel.findOne({email})
 
         if(!user) {
-            throw new Error("Foydalanuvchi topilmadi")
+            throw BaseError.BadRequest("Foydalanuvchi topilmadi")
         }
 
         const isPassword = await bcrypt.compare(password, user.password)
@@ -65,14 +66,14 @@ class AuthService {
 
     async refresh(refreshToken) {
         if(!refreshToken){
-            throw new Error('refresh auth muddati tugadi')
+            throw BaseError.UnauthorizedError('refresh auth muddati tugadi')
         }
 
         const userPayload = tokenService.validateRefreshToken(refreshToken)
 
         const tokenDb = await tokenService.findToken(refreshToken)
         if(!userPayload || !tokenDb) {
-            throw new Error('refresh auth muddati tugadiiiii')
+            throw BaseError.UnauthorizedError('refresh auth muddati tugadiiiii')
         }
 
         const user = await userModel.findById(userPayload.id)
